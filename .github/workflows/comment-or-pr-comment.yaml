@@ -1,0 +1,1 @@
+# if a PR review or Issue Comment (must be PR) is from author, set to review required, otherwise if it's from someone in the reviewers group, set to author required
