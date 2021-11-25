@@ -11,7 +11,7 @@ jobs:
       - uses: actions/github-script@v5
         with:
           script: |
-            const reviewerTeams = await octokit.rest.repos.checkCollaborator({
+            const reviewerTeams = await github.rest.repos.checkCollaborator({
               owner: context.repo.owner,
               repo: context.repo.repo,
               username: context.repo.actor,
