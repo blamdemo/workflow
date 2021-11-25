@@ -12,9 +12,25 @@ jobs:
         with:
           github-token: ${{ secrets.ORG_READ }}
           script: |
-            const reviewerTeams = await github.rest.teams.listMembersInOrg({
+            const {data: reviewerMembers} = await github.rest.teams.listMembersInOrg({
               org: context.payload.organization.login,
               team_slug: 'reviewers'
             });
-            console.log(reviewerTeams)
+            
+            const isReviewer = reviewerMembers.some(({login}) => login === context.actor);
+            if (!isReviewer) return;
+            
+            github.rest.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'pending-review'
+            });
+            
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['pending-author-response']
+            });
             
