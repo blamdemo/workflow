@@ -10,11 +10,11 @@ jobs:
     steps:
       - uses: actions/github-script@v5
         with:
+          github-token: ${{ secrets.ORG_READ }}
           script: |
-            const reviewerTeams = await github.rest.teams.getMembershipForUserInOrg({
-              org: 'blamdemo',
-              team_slug: 'reviewers',
-              username: context.actor,
+            const reviewerTeams = await github.rest.teams.listMembersInOrg({
+              org: context.payload.organization.login,
+              team_slug: 'reviewers'
             });
             
             
