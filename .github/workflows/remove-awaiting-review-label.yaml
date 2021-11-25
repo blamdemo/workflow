@@ -11,11 +11,12 @@ jobs:
       - uses: actions/github-script@v5
         with:
           script: |
-            const reviewerTeams = await github.rest.repos.checkCollaborator({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+            const reviewerTeams = await github.rest.teams.getMembershipForUserInOrg({
+              org: 'blamdemo',
+              team_slug: 'reviewers',
               username: context.actor,
             });
+            
             
             console.log(reviewerTeams)
             github.rest.issues.removeLabels({
