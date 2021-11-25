@@ -14,7 +14,7 @@ jobs:
             const reviewerTeams = await github.rest.repos.checkCollaborator({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              username: context.repo.actor,
+              username: context.actor,
             });
             
             console.log(reviewerTeams)
