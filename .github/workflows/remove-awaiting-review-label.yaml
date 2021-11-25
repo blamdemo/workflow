@@ -1,1 +1,26 @@
+# on a review from someone in the reviewers group, remove the awaiting-review label and add the awaiting-author label
+name: Remove pending review
+on:
+  pull_request_review:
+    types: [submitted]
 
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v5
+        with:
+          script: |
+            const reviewerTeams = await octokit.rest.repos.checkCollaborator({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: context.repo.actor,
+            });
+            
+            console.log(reviewerTeams)
+            github.rest.issues.removeLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['pending-review']
+            })
