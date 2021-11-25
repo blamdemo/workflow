@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v5
+        id: get-reviewers
         with:
           github-token: ${{ secrets.ORG_READ }}
           script: |
@@ -16,8 +17,13 @@ jobs:
               org: context.payload.organization.login,
               team_slug: 'reviewers'
             });
-            
-            const isReviewer = reviewerMembers.some(({login}) => login === context.actor);
+            return reviewerMembers;
+      - uses: actions/github-script@v5
+        id: fix-labels
+        with:
+
+          script: |
+            const isReviewer = ${{steps.get-reviewers.outputs.result}}.some(({login}) => login === context.actor);
             if (!isReviewer) return;
             
             github.rest.issues.removeLabel({
